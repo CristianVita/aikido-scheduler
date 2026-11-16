@@ -82,6 +82,16 @@ The app isn't on Google Play. It's installed from the APK file, downloaded from 
 
 Requires Android 8.0 or newer.
 
+### Automatic updates with Obtainium
+
+Without Google Play, new versions don't arrive on their own. To get them automatically, you can use [Obtainium](https://github.com/ImranR98/Obtainium), a free app that tracks releases published on GitHub:
+
+1. Install Obtainium, from the **Releases** section of its GitHub page or from F-Droid.
+2. In Obtainium, tap **Add App** and enter this repo's link: `https://github.com/CristianVita/aikido-scheduler`.
+3. If the app is already installed, Obtainium recognizes it and just tracks it; otherwise, it installs it.
+
+From then on, when a new version comes out, you get a notification and install it with a single tap. Your data stays untouched.
+
 ## Starting fresh
 
 The app starts with no attendance history: the file loaded on first install (`app/src/main/assets/history.json`) is an empty template, with today's date as the tracking start. Anyone installing it begins with their own blank slate, not anyone else's data, and won't be asked about days before they installed it.

@@ -82,6 +82,16 @@ Aplicația nu e pe Google Play. Se instalează din fișierul APK, descărcat din
 
 Necesită Android 8.0 sau mai nou.
 
+### Actualizări automate cu Obtainium
+
+Fără Google Play, versiunile noi nu vin singure. Ca să le primești automat, poți folosi [Obtainium](https://github.com/ImranR98/Obtainium), o aplicație gratuită care urmărește versiunile publicate pe GitHub:
+
+1. Instalează Obtainium, din secțiunea **Releases** a paginii lui de GitHub sau din F-Droid.
+2. În Obtainium, apasă **Add App** și pune link-ul acestui repo: `https://github.com/CristianVita/aikido-scheduler`.
+3. Dacă ai deja aplicația instalată, Obtainium o recunoaște și doar o urmărește; altfel, o instalează.
+
+De acum, când apare o versiune nouă, primești o notificare și o instalezi cu o singură atingere. Datele rămân neatinse.
+
 ## Pornire curată
 
 Aplicația pornește fără niciun istoric: fișierul încărcat la prima instalare (`app/src/main/assets/history.json`) e un șablon gol, cu data instalării ca început al urmăririi. Oricine o instalează pornește cu propria pagină albă, nu cu datele altcuiva, și nu va fi întrebat despre zile dinainte de instalare.
