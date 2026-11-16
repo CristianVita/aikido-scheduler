@@ -21,12 +21,10 @@ data class Entry(
 )
 
 data class Question(val date: LocalDate, val kind: Kind, val title: String?) {
-    val text: String
-        get() = if (title != null) {
-            "Ai fost la „$title” ${formatDay(date)}?"
-        } else {
-            "Ai fost la antrenament ${formatDay(date)}?"
-        }
+    fun text(today: LocalDate): String {
+        val what = if (title != null) "la „$title”" else "la antrenament"
+        return if (date == today) "Ai fost azi $what?" else "Ai fost $what ${formatDay(date)}?"
+    }
 }
 
 /**

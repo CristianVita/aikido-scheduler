@@ -25,6 +25,7 @@ object Reminders {
     private const val NOTIFICATION_ID = 1
     private const val EXTRA_DATE = "date"
     private const val EXTRA_STATUS = "status"
+    internal const val EXTRA_REFRESH = "refresh"
 
     /** Arms the next daily check. Re-arming replaces the previous alarm. */
     fun schedule(context: Context) {
@@ -39,6 +40,22 @@ object Reminders {
                 context,
                 0,
                 Intent(context, ReminderReceiver::class.java),
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            ),
+        )
+    }
+
+    // A question about today says "azi"; if it is still unanswered after midnight, it is
+    // re-posted with its date instead.
+    private fun scheduleMidnightRefresh(context: Context) {
+        val midnight = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).plusMinutes(1)
+        context.getSystemService(AlarmManager::class.java).setAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            midnight.toInstant().toEpochMilli(),
+            PendingIntent.getBroadcast(
+                context,
+                1,
+                Intent(context, ReminderReceiver::class.java).putExtra(EXTRA_REFRESH, true),
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
             ),
         )
@@ -82,11 +99,14 @@ object Reminders {
             Intent(context, MainActivity::class.java),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
+        val today = LocalDate.now()
+        val text = question.text(today)
+        if (question.date == today) scheduleMidnightRefresh(context)
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle("Antrenamente Aikido")
-            .setContentText(question.text)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(question.text))
+            .setContentText(text)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(text))
             .setContentIntent(open)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
             .addAction(0, "Am fost", answer(context, question.date, Status.PRESENT))
@@ -119,6 +139,10 @@ object Reminders {
 
 class ReminderReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        if (intent.getBooleanExtra(Reminders.EXTRA_REFRESH, false)) {
+            Reminders.syncActive(context)
+            return
+        }
         Reminders.showNext(context)
         Reminders.schedule(context)
     }

@@ -4,6 +4,7 @@ import com.aikido.antrenamente.data.Backup
 import com.aikido.antrenamente.data.BackupCodec
 import com.aikido.antrenamente.domain.Entry
 import com.aikido.antrenamente.domain.Kind
+import com.aikido.antrenamente.domain.Question
 import com.aikido.antrenamente.domain.Schedule
 import com.aikido.antrenamente.domain.Status
 import com.aikido.antrenamente.domain.trainingCount
@@ -99,7 +100,17 @@ class ScheduleTest {
         assertEquals(emptyList<LocalDate>(), pendingDays(entries, fri))
         val question = Schedule.pending(entries, start, sat).single()
         assertEquals(sat, question.date)
-        assertTrue(question.text.contains("Stagiu Perpelici"))
+        assertTrue(question.text(sat).contains("Stagiu Perpelici"))
+    }
+
+    @Test
+    fun questionSaysTodayOnlyForToday() {
+        val training = Question(fri, Kind.TRAINING, null)
+        assertEquals("Ai fost azi la antrenament?", training.text(fri))
+        assertEquals("Ai fost la antrenament vineri, 6 noiembrie?", training.text(sat))
+        val stage = Question(sat, Kind.STAGE, "Stagiu")
+        assertEquals("Ai fost azi la „Stagiu”?", stage.text(sat))
+        assertEquals("Ai fost la „Stagiu” sâmbătă, 7 noiembrie?", stage.text(mon))
     }
 
     @Test

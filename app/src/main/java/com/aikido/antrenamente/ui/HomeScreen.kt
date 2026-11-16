@@ -112,11 +112,10 @@ private fun QuestionCard(
 ) {
     Card(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            when (question.date) {
-                today -> Text("Azi", style = MaterialTheme.typography.labelLarge)
-                today.minusDays(1) -> Text("Ieri", style = MaterialTheme.typography.labelLarge)
+            if (question.date == today.minusDays(1)) {
+                Text("Ieri", style = MaterialTheme.typography.labelLarge)
             }
-            Text(question.text, style = MaterialTheme.typography.titleMedium)
+            Text(question.text(today), style = MaterialTheme.typography.titleMedium)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(
                     onClick = { onAnswer(question.date, Status.PRESENT) },
